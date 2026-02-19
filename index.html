@@ -7,6 +7,8 @@
 </head>
 <body>
     <input type="file" name="fileinput" id="fileinput" onchange="olvas(this)">
+    <h2 id="eredmenyek"></h2>
+    <ul id="mylist"></ul>
 </body>
 <script>
     function olvas(mit) {
@@ -85,9 +87,14 @@
             console.log("8. körzet: " + jeloltek.filter(j => j.korzet == 8).reduce((osszeg, j) => osszeg + j.szavazatok, 0));
 
             //5. Feladat
-            console.log("1. körzet eredménye:");
+            document.getElementById("eredmenyek").innerHTML = "1. körzet eredményei:";
+
+            const list = document.getElementById("mylist");
+
             for (const k of korzet1jeloltek) {
-                console.log(k.vezeteknev + " " + k.utonev + ": " + k.szavazatok + " szavazat");
+                const li = document.createElement("li");
+                li.textContent = (k.vezeteknev + " " + k.utonev + ": " + k.szavazatok + " szavazat");
+                list.appendChild(li);
             }
         }
 
