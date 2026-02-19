@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Szavazatok</title>
+</head>
+<body>
+    <input type="file" name="fileinput" id="fileinput" onchange="olvas(this)">
+</body>
+<script>
+    function olvas(mit) {
+        let file = mit.files && mit.files[0];
+        let olvaso = new FileReader();
+
+        olvaso.readAsText(file, 'UTF-8');
+
+        olvaso.onload = function(){
+            let tartalom = olvaso.result;
+            console.log(tartalom);
+
+            class Jelolt{
+                constructor(korzet, szavazatok, vezeteknev, utonev, part) {
+                    this.korzet = korzet;
+                    this.szavazatok = szavazatok;
+                    this.vezeteknev = vezeteknev;
+                    this.utonev = utonev;
+                    this.part = part;
+                }
+            }
+
+            let jeloltek = [];
+            let tiszpart = 0;
+            let korzet8jeloltek = [];
+            let korzet1jeloltek = [];
+            let sorok = tartalom.split("\r\n");
+            for(let i = 1; i < sorok.length; i++){
+                let darabok = sorok[i].trim().split(" ");
+                let korzet = parseInt(darabok[0]);
+                let szavazatok = parseInt(darabok[1]);
+                let vezetek = darabok[2];
+                let utonev = darabok[3];
+                let part = darabok[4]; 
+                let j = new Jelolt(korzet, szavazatok, vezetek, utonev, part);
+                jeloltek.push(j);
+
+                if(part == "TISZ"){
+                    tiszpart++;
+                }
+
+                if(korzet == 8){
+                    korzet8jeloltek.push(j);
+                }
+                if(korzet == 1){
+                    korzet1jeloltek.push(j);
+                }
+            }
+            console.log(jeloltek)
+
+            // 1. Feladat
+            console.log("Jelöltek száma: " + jeloltek.length);
+
+            // 2. Feladat
+            console.log("TISZ párt jelöltjei száma: " + tiszpart);
+
+            // 3. Feladat
+            let min = korzet8jeloltek[0];
+            for (const k of korzet8jeloltek) {
+                if (k.szavazatok < min.szavazatok) {
+                    min = k;
+                }
+            }
+
+            console.log("8. körzet legkevesebb szavazattal rendelkező jelölt: " + min.vezeteknev + " " + min.utonev);
+
+            // 4. Feladat
+            console.log("Szavazatok száma körzetenként:");
+            console.log("1. körzet: " + jeloltek.filter(j => j.korzet == 1).reduce((osszeg, j) => osszeg + j.szavazatok, 0));
+            console.log("2. körzet: " + jeloltek.filter(j => j.korzet == 2).reduce((osszeg, j) => osszeg + j.szavazatok, 0));
+            console.log("3. körzet: " + jeloltek.filter(j => j.korzet == 3).reduce((osszeg, j) => osszeg + j.szavazatok, 0));
+            console.log("4. körzet: " + jeloltek.filter(j => j.korzet == 4).reduce((osszeg, j) => osszeg + j.szavazatok, 0));
+            console.log("5. körzet: " + jeloltek.filter(j => j.korzet == 5).reduce((osszeg, j) => osszeg + j.szavazatok, 0));
+            console.log("6. körzet: " + jeloltek.filter(j => j.korzet == 6).reduce((osszeg, j) => osszeg + j.szavazatok, 0));
+            console.log("7. körzet: " + jeloltek.filter(j => j.korzet == 7).reduce((osszeg, j) => osszeg + j.szavazatok, 0));
+            console.log("8. körzet: " + jeloltek.filter(j => j.korzet == 8).reduce((osszeg, j) => osszeg + j.szavazatok, 0));
+
+            //5. Feladat
+            console.log("1. körzet eredménye:");
+            for (const k of korzet1jeloltek) {
+                console.log(k.vezeteknev + " " + k.utonev + ": " + k.szavazatok + " szavazat");
+            }
+        }
+
+    }
+</script>
+</html>
